@@ -1,9 +1,13 @@
+import datetime
+
+
 class Task:
-    def __init__(self, task_id, title, description, status="ToDo"):
+    def __init__(self, task_id, title, description, status="unchecked"):
         self.task_id = task_id
         self.title = title
         self.description = description
         self.status = status
+        self.created_at = datetime.datetime.now()
 
 
 class TaskManager:
@@ -23,9 +27,13 @@ class TaskManager:
 
         self.tasks.append(task)
 
+    def create_task(self, task_id, title, desc, status="unchecked"):
+        task = Task(task_id, title, desc, status)
+        self.add_task(task)
+
     def display_task(self, task_id):
         task = self.get_task(task_id)
-        return f"Title: {task.title},\nDescription: {task.description},\nStatus: {task.status}"
+        return f"Title: {task.title},\nDescription: {task.description},\nStatus: {task.status},\nCreated_at: {task.created_at}"
 
     def update_task(self, task_id, title=None, desc=None):
         target_task = self.get_task(task_id)
@@ -40,18 +48,21 @@ class TaskManager:
         task = self.get_task(task_id)
         task.status = status
 
+    def delete_task(self, task_id):
+        task = self.get_task(task_id)
+        self.tasks.remove(task)
 
-
-task1 = Task(1, "title1", "desc1")
-task2 = Task(2, "title2", "desc2")
 
 task_manager = TaskManager()
 
-task_manager.add_task(task1)
-task_manager.add_task(task2)
-
-print(task_manager.display_task(1))
+task_manager.create_task(1, "title1", "desc1")
+task_manager.create_task(2, "title2", "desc2", "checked")
 
 task_manager.update_task(1, title="new_title")
 print(task_manager.display_task(1))
+
+task_manager.update_status(2, "unchecked")
+print(task_manager.display_task(2))
+
+task_manager.delete_task(1)
 
