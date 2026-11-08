@@ -65,4 +65,3 @@ task_manager.update_status(2, "unchecked")
 print(task_manager.display_task(2))
 
 task_manager.delete_task(1)
-
