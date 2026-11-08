@@ -9,3 +9,9 @@ wheels/
 
 # Virtual environments
 .venv
+
+# SQLite database
+*.db
+
+# macOS
+.DS_Store
