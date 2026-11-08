@@ -9,20 +9,18 @@ class Task:
 class TaskManager:
     def __init__(self):
         self.tasks = []
-        self.next_id = 1
 
-    def add_task(self, title, description, status="ToDo"):
-        task = Task(title, description, status)
+    def add_task(self, task):
+        for existing_task in self.tasks:
+            if task.task_id == existing_task.task_id:
+                raise ValueError(f"Task ID {task.task_id} already exists!")
+
         self.tasks.append(task)
-        self.next_id += 1
 
-        # for existing_task in self.tasks:
-        #     if task.task_id == existing_task.task_id:
-        #         raise ValueError(f"Task ID {task.task_id} already exists!")
-        #
-        # self.tasks.append(task)
-
-
+    def display_task(self, id):
+        for task in self.tasks:
+            if task.task_id == id:
+                return f"Title: {task.title},\nDescription: {task.description},\nStatus: {task.status}"
 
 
 
@@ -33,6 +31,10 @@ class TaskManager:
 
 task1 = Task(1, "title1", "desc1")
 task2 = Task(2, "title2", "desc2")
+
 task_manager = TaskManager()
+
 task_manager.add_task(task1)
 task_manager.add_task(task2)
+
+print(task_manager.display_task(1))
