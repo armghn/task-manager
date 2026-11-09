@@ -63,53 +63,56 @@ class TaskManager:
         del task
 
 
-task_manager = TaskManager()
+def main():
+    task_manager = TaskManager()
 
+    class Switch:
+        def case_1(self):
+            task_id = int(input("task_id: "))
+            title = input("title: ")
+            desc = input("description: ")
+            stat = input("status (Enter to skip): ")
+            if stat:
+                stat = int(stat)
+            else:
+                stat = Status.TODO.value
+            task_manager.create_task(task_id, title, desc, stat)
 
-class Switch:
-    def case_1(self):
-        task_id = int(input("task_id: "))
-        title = input("title: ")
-        desc = input("description: ")
-        stat = input("status (Enter to skip): ")
-        if stat:
-            stat = int(stat)
+        def case_2(self):
+            task_id = int(input("task_id: "))
+            title = input("title (Enter to skip):")
+            desc = input("description (Enter to skip):")
+            task_manager.update_task(task_id, title, desc)
+
+        def case_3(self):
+            task_id = int(input("task id: "))
+            stat = input("status: ")
+            task_manager.update_status(task_id, stat)
+
+        def case_4(self):
+            task_id = int(input("task id: "))
+            print(task_manager.display_task(task_id))
+
+        def case_5(self):
+            task_id = int(input("task_id: "))
+            task_manager.delete_task(task_id)
+
+        def default(self):
+            return "unknown"
+
+        def switch(self, value):
+            return getattr(self, f"case_{value}", self.default)()
+
+    obj = Switch()
+
+    while True:
+        action = int(input(
+            "\nchoose an option:\n1.create task\n2.update task\n3.update status\n4.display task\n5.delete task\n6.Exit\n"))
+        if action == 6:
+            break
         else:
-            stat = Status.TODO.value
-        task_manager.create_task(task_id, title, desc, stat)
-
-    def case_2(self):
-        task_id = int(input("task_id: "))
-        title = input("title (Enter to skip):")
-        desc = input("description (Enter to skip):")
-        task_manager.update_task(task_id, title, desc)
-
-    def case_3(self):
-        task_id = int(input("task id: "))
-        stat = input("status: ")
-        task_manager.update_status(task_id, stat)
-
-    def case_4(self):
-        task_id = int(input("task id: "))
-        print(task_manager.display_task(task_id))
-
-    def case_5(self):
-        task_id = int(input("task_id: "))
-        task_manager.delete_task(task_id)
-
-    def default(self):
-        return "unknown"
-
-    def switch(self, value):
-        return getattr(self, f"case_{value}", self.default)()
+            obj.switch(action)
 
 
-obj = Switch()
-
-while True:
-    action = int(input(
-        "\nchoose an option:\n1.create task\n2.update task\n3.update status\n4.display task\n5.delete task\n6.Exit\n"))
-    if action == 6:
-        break
-    else:
-        obj.switch(action)
+if __name__ == "__main__":
+    main()
