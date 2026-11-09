@@ -1,8 +1,17 @@
 import datetime
+from enum import Enum
+
+
+class Status(Enum):
+    BACKLOG = 1
+    TODO = 2
+    DOING = 3
+    DONE = 4
+    BLOCK = 5
 
 
 class Task:
-    def __init__(self, task_id, title, description, status="unchecked"):
+    def __init__(self, task_id, title, description, status=Status.TODO.value):
         self.task_id = task_id
         self.title = title
         self.description = description
@@ -27,7 +36,7 @@ class TaskManager:
 
         self.tasks.append(task)
 
-    def create_task(self, task_id, title, desc, status="unchecked"):
+    def create_task(self, task_id, title, desc, status=Status.TODO.value):
         task = Task(task_id, title, desc, status)
         self.add_task(task)
 
@@ -51,17 +60,56 @@ class TaskManager:
     def delete_task(self, task_id):
         task = self.get_task(task_id)
         self.tasks.remove(task)
+        del task
 
 
 task_manager = TaskManager()
 
-task_manager.create_task(1, "title1", "desc1")
-task_manager.create_task(2, "title2", "desc2", "checked")
 
-task_manager.update_task(1, title="new_title")
-print(task_manager.display_task(1))
+class Switch:
+    def case_1(self):
+        task_id = int(input("task_id: "))
+        title = input("title: ")
+        desc = input("description: ")
+        stat = input("status (Enter to skip): ")
+        if stat:
+            stat = int(stat)
+        else:
+            stat = Status.TODO.value
+        task_manager.create_task(task_id, title, desc, stat)
 
-task_manager.update_status(2, "unchecked")
-print(task_manager.display_task(2))
+    def case_2(self):
+        task_id = int(input("task_id: "))
+        title = input("title (Enter to skip):")
+        desc = input("description (Enter to skip):")
+        task_manager.update_task(task_id, title, desc)
 
-task_manager.delete_task(1)
+    def case_3(self):
+        task_id = int(input("task id: "))
+        stat = input("status: ")
+        task_manager.update_status(task_id, stat)
+
+    def case_4(self):
+        task_id = int(input("task id: "))
+        print(task_manager.display_task(task_id))
+
+    def case_5(self):
+        task_id = int(input("task_id: "))
+        task_manager.delete_task(task_id)
+
+    def default(self):
+        return "unknown"
+
+    def switch(self, value):
+        return getattr(self, f"case_{value}", self.default)()
+
+
+obj = Switch()
+
+while True:
+    action = int(input(
+        "\nchoose an option:\n1.create task\n2.update task\n3.update status\n4.display task\n5.delete task\n6.Exit\n"))
+    if action == 6:
+        break
+    else:
+        obj.switch(action)
