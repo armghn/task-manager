@@ -11,7 +11,7 @@ class Status(Enum):
 
 
 class Task:
-    def __init__(self, task_id, title, description, status=Status.TODO.value):
+    def __init__(self, task_id, title, description, status=Status.TODO):
         self.task_id = task_id
         self.title = title
         self.description = description
@@ -36,21 +36,21 @@ class TaskManager:
 
         self.tasks.append(task)
 
-    def create_task(self, task_id, title, desc, status=Status.TODO.value):
+    def create_task(self, task_id, title, desc, status=Status.TODO):
         task = Task(task_id, title, desc, status)
         self.add_task(task)
 
     def display_task(self, task_id):
         task = self.get_task(task_id)
-        return f"Title: {task.title},\nDescription: {task.description},\nStatus: {task.status},\nCreated_at: {task.created_at}"
+        return f"Title: {task.title},\nDescription: {task.description},\nStatus: {task.status.name},\nCreated_at: {task.created_at}"
 
     def update_task(self, task_id, title=None, desc=None):
         target_task = self.get_task(task_id)
 
-        if title is not None:
+        if title:
             target_task.title = title
 
-        if desc is not None:
+        if desc:
             target_task.description = desc
 
     def update_status(self, task_id, status):
@@ -60,7 +60,6 @@ class TaskManager:
     def delete_task(self, task_id):
         task = self.get_task(task_id)
         self.tasks.remove(task)
-        del task
 
 
 def main():
@@ -73,9 +72,9 @@ def main():
             desc = input("description: ")
             stat = input("status (Enter to skip): ")
             if stat:
-                stat = int(stat)
+                stat = Status[stat.upper()]
             else:
-                stat = Status.TODO.value
+                stat = Status.TODO
             task_manager.create_task(task_id, title, desc, stat)
 
         def case_2(self):
@@ -86,7 +85,7 @@ def main():
 
         def case_3(self):
             task_id = int(input("task id: "))
-            stat = input("status: ")
+            stat = Status[input("status: ").upper()]
             task_manager.update_status(task_id, stat)
 
         def case_4(self):
